@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmácia Verde - Sustentabilidade e Logística Reversa nas UBS</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1b4332;
+            --primary-light: #2d6a4f;
+            --accent: #52b788;
+            --accent-light: #74c69d;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .step-active {
+            border-color: #52b788 !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 10px 25px -5px rgba(82, 183, 136, 0.3) !important;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2d6a4f;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Top Navigation / Banner Header -->
+    <header class="bg-gradient-to-r from-[#052e16] via-[#14532d] to-[#166534] text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-[#52b788] flex items-center justify-center font-bold text-[#052e16] text-xl shadow-inner">
+                    FV
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">Farmácia Verde</h1>
+                    <p class="text-xs md:text-sm text-[#86efac]">Logística Reversa de Embalagens Cartonadas em UBS</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap gap-2 text-xs md:text-sm font-medium">
+                <a href="#diagnostico" class="px-3 py-1.5 rounded-md hover:bg-white/10 transition">Diagnóstico</a>
+                <a href="#fluxograma" class="px-3 py-1.5 rounded-md hover:bg-white/10 transition">Fluxograma</a>
+                <a href="#simulador" class="px-3 py-1.5 rounded-md hover:bg-white/10 transition">Simulador de Impacto</a>
+                <a href="#matriz" class="px-3 py-1.5 rounded-md hover:bg-white/10 transition">Matriz RDC 222</a>
+                <a href="#artigos" class="px-3 py-1.5 rounded-md hover:bg-white/10 transition">Evidência Científica</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- INTRODUCTORY HERO SECTION -->
+        <section class="bg-white rounded-2xl shadow-sm border border-emerald-100 p-6 md:p-8">
+            <div class="max-w-3xl">
+                <span class="inline-block px-3 py-1 bg-emerald-100 text-[#14532d] font-semibold text-xs rounded-full uppercase tracking-wider mb-3">
+                    Projeto Integrador Extensionista — Gestão Hospitalar 2026
+                </span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-[#052e16] mb-4">
+                    Transformando Resíduos Cartonados de Saúde em Valor Socioambiental
+                </h2>
+                <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
+                    Esta aplicação interativa consolida o plano operacional e fundamentação científica para a implantação da logística reversa e valorização de embalagens secundárias (caixas de papelão, cartuchos e bulas) nas Unidades Básicas de Saúde (UBS). Navegue pelos módulos para explorar o diagnóstico regulatório, o fluxo operacional em 6 etapas, o simulador financeiro e a matriz de resíduos.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-100">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <div class="text-2xl font-bold text-[#14532d]">100%</div>
+                    <div class="text-xs text-gray-500 font-medium">Reciclabilidade do Papelão Limpo</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <div class="text-2xl font-bold text-[#14532d]">Grupo D</div>
+                    <div class="text-xs text-gray-500 font-medium">Classificação RDC 222/2018 ANVISA</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <div class="text-2xl font-bold text-[#14532d]">PNRS</div>
+                    <div class="text-xs text-gray-500 font-medium">Lei Federal 12.305/2010</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <div class="text-2xl font-bold text-[#14532d]">Renda</div>
+                    <div class="text-xs text-gray-500 font-medium">Inclusão de Catadores Locais</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: DIAGNÓSTICO E CONTEXTO REGULATÓRIO -->
+        <section id="diagnostico" class="space-y-6 scroll-mt-24">
+            <div class="border-l-4 border-[#166534] pl-4">
+                <h2 class="text-xl md:text-2xl font-bold text-[#052e16]">1. Diagnóstico e Contextualização do Problema</h2>
+                <p class="text-xs md:text-sm text-gray-500">
+                    Compreenda a problemática do descarte incorreto de resíduos recicláveis e os pilares regulatórios da saúde pública.
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                As Unidades Básicas de Saúde (UBS) e farmácias hospitalares caracterizam-se pela movimentação contínua e massiva de medicamentos. Cada lote recebido e dispensado gera volumes expressivos de embalagens secundárias e terciárias. Sem uma rotina padronizada de triagem na fonte, esses materiais recicláveis são frequentemente descartados no lixo comum, acarretando custos desnecessários com aterros sanitários e privando as cooperativas de reciclagem de recursos valiosos.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-emerald-500 transition">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-[#166534] flex items-center justify-center font-bold mb-3">
+                        §1
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">ANVISA RDC 222/2018</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Regulamenta as boas práticas de gerenciamento dos Resíduos de Serviços de Saúde (RSS). Define expressamente que papéis, caixas e bulas sem contato direto com fármacos pertencem ao **Grupo D (Resíduos Comuns Recicláveis)**.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-emerald-500 transition">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-[#166534] flex items-center justify-center font-bold mb-3">
+                        §2
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">PNRS - Lei 12.305/2010</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Estabelece a Política Nacional de Resíduos Sólidos. Institui a responsabilidade compartilhada pelo ciclo de vida dos produtos e prioriza a não geração, redução, reutilização, reciclagem e tratamento de resíduos.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:border-emerald-500 transition">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-[#166534] flex items-center justify-center font-bold mb-3">
+                        §3
+                    </div>
+                    <h3 class="font-bold text-gray-900 mb-2">Decreto nº 10.388/2020</h3>
+                    <p class="text-xs text-gray-600 leading-relaxed">
+                        Regulamenta a logística reversa de medicamentos domiciliares de uso humano. Embora focado na rede comercial privada, estabelece as diretrizes para que estabelecimentos públicos estruturem seus próprios fluxos internos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Context Warning Box -->
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
+                <div class="flex items-start space-x-3">
+                    <span class="text-amber-600 font-bold text-lg">!</span>
+                    <div>
+                        <h4 class="text-sm font-bold text-amber-900">Atenção para a Separação na Fonte</h4>
+                        <p class="text-xs text-amber-800 leading-relaxed mt-1">
+                            A contaminação cruzada do papelão com resíduos biológicos (Grupo A) ou químicos (Grupo B - medicamentos vencidos ou frascos quebrados) invalida a reciclagem do lote e exige tratamento especial de alto custo. A capacitação da equipe da farmácia é crucial.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: FLUXOGRAMA DE LOGÍSTICA REVERSA -->
+        <section id="fluxograma" class="space-y-6 scroll-mt-24">
+            <div class="border-l-4 border-[#166534] pl-4">
+                <h2 class="text-xl md:text-2xl font-bold text-[#052e16]">2. Fluxograma Operacional de Logística Reversa</h2>
+                <p class="text-xs md:text-sm text-gray-500">
+                    Clique nas etapas abaixo para examinar os procedimentos padronizados em cada fase do processo na UBS.
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                A implementação do projeto Farmácia Verde organiza o manuseio dos insumos em 6 fases encadeadas. Ao descaracterizar e compactar o papelão na própria unidade, maximiza-se a capacidade de armazenamento interno e garante-se a integridade do material para a coleta seletiva.
+            </p>
+
+            <!-- Interactive Flow Steps Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="flowchart-steps">
+                <!-- Step 1 -->
+                <div onclick="selectStep(1)" id="step-card-1" class="step-card step-active cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">1</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Fase Inicial</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Recebimento & Almoxarifado</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Chegada das caixas organizadoras e lotes de medicamentos vindos da CAF central.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div onclick="selectStep(2)" id="step-card-2" class="step-card cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">2</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Triagem Crítica</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Dispensação & Segregação</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Separação imediata das embalagens secundárias e bulas durante o atendimento.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div onclick="selectStep(3)" id="step-card-3" class="step-card cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">3</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Aproveitamento</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Descaracterização</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Remoção de dados confidenciais ou etiquetas e desmonte plano das caixas.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div onclick="selectStep(4)" id="step-card-4" class="step-card cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">4</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Organização</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Armazenamento Seletivo</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Estocagem temporária em local seco, coberto e identificado (Ponto Verde).</p>
+                </div>
+
+                <!-- Step 5 -->
+                <div onclick="selectStep(5)" id="step-card-5" class="step-card cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">5</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Logística</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Coleta por Cooperativa</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Retirada agendada por cooperativas cadastradas de catadores de recicláveis.</p>
+                </div>
+
+                <!-- Step 6 -->
+                <div onclick="selectStep(6)" id="step-card-6" class="step-card cursor-pointer p-5 rounded-xl border-2 border-gray-200 bg-white transition duration-200 hover:border-emerald-400">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="w-8 h-8 rounded-full bg-[#1b4332] text-white font-bold text-sm flex items-center justify-center">6</span>
+                        <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Retorno Socioambiental</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-base mb-1">Geração de Emprego e Renda</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">Inclusão social de catadores e redução de pegada ecológica na gestão pública.</p>
+                </div>
+            </div>
+
+            <!-- Dynamic Detail Display Box -->
+            <div class="bg-[#f0fdf4] border border-emerald-200 rounded-xl p-6 shadow-sm">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span id="detail-step-number" class="px-2.5 py-1 bg-[#166534] text-white text-xs font-bold rounded-md">
+                        Passo 1
+                    </span>
+                    <h3 id="detail-step-title" class="text-lg font-bold text-[#052e16]">
+                        Recebimento e Descompactação na Farmácia da UBS
+                    </h3>
+                </div>
+                <p id="detail-step-desc" class="text-sm text-gray-700 leading-relaxed mb-4">
+                    As caixas contendo medicamentos chegam do Almoxarifado Central (CAF). O servidor ou residente de gestão hospitalar realiza a conferência dos insumos. As embalagens de embarque terciárias que não estiverem avariadas são separadas para devolução direta no próximo ciclo do veículo de transporte.
+                </p>
+                <div class="grid md:grid-cols-2 gap-4 bg-white p-4 rounded-lg border border-emerald-100 text-xs">
+                    <div>
+                        <span class="font-bold text-emerald-900 block mb-1">Ação Operacional Recomendada:</span>
+                        <p id="detail-step-[#052e16]action" class="text-gray-600">Verificar se há umidade no papelão e acondicionar o lote em pallets antes da abertura.</p>
+                    </div>
+                    <div>
+                        <span class="font-bold text-emerald-900 block mb-1">Responsáveis na UBS:</span>
+                        <p id="detail-step-staff" class="text-gray-600">Farmacêutico Responsável Técnico, Técnicos de Farmácia e Almoxarife.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: SIMULADOR DE IMPACTO FINANCIERO E SOCIOAMBIENTAL -->
+        <section id="simulador" class="space-y-6 scroll-mt-24">
+            <div class="border-l-4 border-[#166534] pl-4">
+                <h2 class="text-xl md:text-2xl font-bold text-[#052e16]">3. Simulador de Impacto Socioambiental & Econômico</h2>
+                <p class="text-xs md:text-sm text-gray-500">
+                    Ajuste o volume estimado de descarte mensal para simular o retorno ecológico e financeiro anual.
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                Através deste modelo analítico, gestores hospitalares e secretários municipais de saúde podem estimar os benefícios acumulados da destinação correta do papelão Grupo D. Os valores consideram o custo médio evitado de transbordo/aterro sanitário municipal e o valor médio repassado às cooperativas locais.
+            </p>
+
+            <!-- Simulator Interactive Controls & Cards -->
+            <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-8">
+                <!-- Sliders Section -->
+                <div class="grid md:grid-cols-2 gap-8 items-center bg-[#f8fafc] p-6 rounded-xl border border-slate-200">
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label for="input-volume" class="font-bold text-sm text-gray-800">
+                                Volume Mensal Reciclado por UBS (kg):
+                            </label>
+                            <span id="display-volume" class="px-3 py-1 bg-[#1b4332] text-white font-bold text-sm rounded-md">
+                                250 kg
+                            </span>
+                        </div>
+                        <input type="range" id="input-volume" min="50" max="1500" value="250" step="25"
+                               class="w-full h-2 bg-emerald-200 rounded-lg appearance-none cursor-pointer accent-[#14532d]"
+                               oninput="runSimulation()">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-medium">
+                            <span>50 kg (UBS Pequena)</span>
+                            <span>500 kg (UBS Média)</span>
+                            <span>1500 kg (Rede Municipal)</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label for="input-units" class="font-bold text-sm text-gray-800">
+                                Número de Unidades Básicas (UBSs):
+                            </label>
+                            <span id="display-units" class="px-3 py-1 bg-[#1b4332] text-white font-bold text-sm rounded-md">
+                                1 Unidade
+                            </span>
+                        </div>
+                        <input type="range" id="input-units" min="1" max="50" value="1" step="1"
+                               class="w-full h-2 bg-emerald-200 rounded-lg appearance-none cursor-pointer accent-[#14532d]"
+                               oninput="runSimulation()">
+                        <div class="flex justify-between text-[10px] text-gray-400 font-medium">
+                            <span>1 UBS</span>
+                            <span>25 UBSs</span>
+                            <span>50 UBSs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Numerical Impact Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
+                        <span class="text-xs font-semibold text-emerald-800 uppercase tracking-wider block">Economia Anual Aterro</span>
+                        <div id="sim-res-economy" class="text-xl md:text-2xl font-extrabold text-[#14532d] mt-1">R$ 12.000</div>
+                        <span class="text-[10px] text-gray-500 mt-1 block">Evitado em custos operacionais</span>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-blue-50 border border-blue-200 text-center">
+                        <span class="text-xs font-semibold text-blue-800 uppercase tracking-wider block">Renda Cooperativas</span>
+                        <div id="sim-res-income" class="text-xl md:text-2xl font-extrabold text-blue-900 mt-1">R$ 1.800</div>
+                        <span class="text-[10px] text-gray-500 mt-1 block">Injeção na economia solidária</span>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-teal-50 border border-teal-200 text-center">
+                        <span class="text-xs font-semibold text-teal-800 uppercase tracking-wider block">CO₂ Evitado Anualmente</span>
+                        <div id="sim-res-co2" class="text-xl md:text-2xl font-extrabold text-teal-900 mt-1">1.500 kg</div>
+                        <span class="text-[10px] text-gray-500 mt-1 block">Redução da pegada de carbono</span>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-center">
+                        <span class="text-xs font-semibold text-amber-800 uppercase tracking-wider block">Árvores Preservadas</span>
+                        <div id="sim-res-trees" class="text-xl md:text-2xl font-extrabold text-amber-900 mt-1">51 Árvores</div>
+                        <span class="text-[10px] text-gray-500 mt-1 block">Preservação vegetal direta</span>
+                    </div>
+                </div>
+
+                <!-- Chart.js Visualization Grid -->
+                <div class="grid lg:grid-cols-2 gap-8 pt-4">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col items-center">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2 text-center">Retorno Financeiro Anual Estimado (R$)</h4>
+                        <div class="chart-container">
+                            <canvas id="financialChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col items-center">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2 text-center">Indicadores de Sustentabilidade Ambiental</h4>
+                        <div class="chart-container">
+                            <canvas id="ecoChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MATRIZ DE CLASSIFICAÇÃO DE RESÍDUOS RDC 222 -->
+        <section id="matriz" class="space-y-6 scroll-mt-24">
+            <div class="border-l-4 border-[#166534] pl-4">
+                <h2 class="text-xl md:text-2xl font-bold text-[#052e16]">4. Matriz de Classificação e Destinação de Resíduos</h2>
+                <p class="text-xs md:text-sm text-gray-500">
+                    Filtre os materiais da farmácia conforme as diretrizes normativas da ANVISA.
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                Para evitar erros operacionais no momento do descarte, utilize a matriz abaixo. Ela relaciona os materiais habitualmente manipulados no balcão de dispensação com as suas respectivas categorias regulatórias e tratamento adequado.
+            </p>
+
+            <!-- Table Filter Buttons -->
+            <div class="flex flex-wrap gap-2 pb-2">
+                <button onclick="filterWasteTable('all')" class="waste-filter-btn px-4 py-1.5 rounded-full text-xs font-bold bg-[#1b4332] text-white shadow-sm transition">
+                    Todos os Resíduos
+                </button>
+                <button onclick="filterWasteTable('Grupo D')" class="waste-filter-btn px-4 py-1.5 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition">
+                    Grupo D (Recicláveis)
+                </button>
+                <button onclick="filterWasteTable('Grupo B')" class="waste-filter-btn px-4 py-1.5 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition">
+                    Grupo B (Químicos)
+                </button>
+                <button onclick="filterWasteTable('Grupo E')" class="waste-filter-btn px-4 py-1.5 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-300 hover:bg-gray-100 transition">
+                    Grupo E (Puro/Perfuro)
+                </button>
+            </div>
+
+            <!-- Table Container -->
+            <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse text-xs md:text-sm">
+                        <thead>
+                            <tr class="bg-[#166534] text-white">
+                                <th class="p-3.5 font-semibold">Tipo de Embalagem / Material</th>
+                                <th class="p-3.5 font-semibold">Classificação RDC 222</th>
+                                <th class="p-3.5 font-semibold">Ação Operacional na UBS</th>
+                                <th class="p-3.5 font-semibold">Destino Final Sustentável</th>
+                            </tr>
+                        </thead>
+                        <tbody id="waste-table-body" class="divide-y divide-gray-200 text-gray-700">
+                            <!-- JS Populated Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: LITERATURA CIENTÍFICA E EVIDÊNCIAS -->
+        <section id="artigos" class="space-y-6 scroll-mt-24">
+            <div class="border-l-4 border-[#166534] pl-4">
+                <h2 class="text-xl md:text-2xl font-bold text-[#052e16]">5. Literatura Científica e Evidências de Referência</h2>
+                <p class="text-xs md:text-sm text-gray-500">
+                    Artigos com revisão por pares que fundamentam o projeto Farmácia Verde.
+                </p>
+            </div>
+
+            <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                O gerenciamento eficiente de resíduos e a viabilidade da reciclagem na atenção primária têm respaldo em publicações nacionais. Explore os estudos selecionados abaixo para aprofundamento acadêmico:
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Article 1 -->
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-0.5 bg-sky-100 text-sky-800 text-[10px] font-bold rounded">
+                            Engenharia Sanitária e Ambiental (2020)
+                        </span>
+                        <h3 class="font-bold text-gray-900 text-sm leading-snug">
+                            Incidência de Resíduos de Serviços de Saúde em Cooperativas de Triagem
+                        </h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Demonstra a viabilidade da triagem do Grupo D no ambiente de saúde e destaca a relevância de eliminar contaminações antes do envio às cooperativas.
+                        </p>
+                    </div>
+                    <a href="https://www.scielo.br/j/esa/a/tpLPxCx5M5dQs6bnxpj6VNt/" target="_blank" rel="noopener noreferrer" 
+                       class="text-xs text-sky-600 font-bold hover:underline inline-flex items-center space-x-1">
+                        <span>Acessar no SciELO</span>
+                        <span>→</span>
+                    </a>
+                </div>
+
+                <!-- Article 2 -->
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-0.5 bg-sky-100 text-sky-800 text-[10px] font-bold rounded">
+                            Ciência & Saúde Coletiva (2021)
+                        </span>
+                        <h3 class="font-bold text-gray-900 text-sm leading-snug">
+                            Descarte de Medicamentos e Resíduos de Saúde: Percepções na Atenção Básica
+                        </h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Investiga as práticas de descarte em Unidades de Saúde da Família e aponta a urgência de treinamentos contínuos para os profissionais da equipe técnica.
+                        </p>
+                    </div>
+                    <a href="https://www.scielo.br/j/csc/a/CDcM7g6CdJvstyBfP7tj8vv/" target="_blank" rel="noopener noreferrer" 
+                       class="text-xs text-sky-600 font-bold hover:underline inline-flex items-center space-x-1">
+                        <span>Acessar no SciELO</span>
+                        <span>→</span>
+                    </a>
+                </div>
+
+                <!-- Article 3 -->
+                <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="inline-block px-2.5 py-0.5 bg-sky-100 text-sky-800 text-[10px] font-bold rounded">
+                            Revista Infarma (2013)
+                        </span>
+                        <h3 class="font-bold text-gray-900 text-sm leading-snug">
+                            Gerenciamento de Resíduos Sólidos e Sustentabilidade Farmacêutica
+                        </h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">
+                            Aborda os ganhos de eficiência operacional e a diminuição de despesas hospitalares diretas com a segregação adequada de caixas de papelão e bulas.
+                        </p>
+                    </div>
+                    <a href="https://revistas.cff.org.br/infarma/article/view/395" target="_blank" rel="noopener noreferrer" 
+                       class="text-xs text-sky-600 font-bold hover:underline inline-flex items-center space-x-1">
+                        <span>Acessar no Periódico</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: ROADMAP DE IMPLEMENTAÇÃO -->
+        <section class="bg-gradient-to-br from-[#1b4332] to-[#2d6a4f] text-white rounded-2xl p-6 md:p-8 shadow-md">
+            <h2 class="text-xl md:text-2xl font-bold mb-4">Guia Rápido de Implementação na UBS (Roadmap)</h2>
+            <div class="grid md:grid-cols-4 gap-6 text-xs md:text-sm">
+                <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                    <div class="font-bold text-emerald-300 mb-1">1. Capacitação</div>
+                    <p class="text-gray-200">Treinar farmacêuticos, técnicos e equipe de limpeza para segregação imediata no atendimento.</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                    <div class="font-bold text-emerald-300 mb-1">2. Ponto Verde</div>
+                    <p class="text-gray-200">Definir e sinalizar recipiente azul limpo e seco exclusivo para o papelão descaracterizado.</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                    <div class="font-bold text-emerald-300 mb-1">3. Parceria Local</div>
+                    <p class="text-gray-200">Formalizar termo de cooperação com a associação ou cooperativa de catadores municipal.</p>
+                </div>
+                <div class="bg-white/10 p-4 rounded-xl border border-white/20">
+                    <div class="font-bold text-emerald-300 mb-1">4. Monitoramento</div>
+                    <p class="text-gray-200">Pesar os lotes coletados mensalmente e apresentar indicadores de economia de gestão.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#052e16] text-white border-t border-emerald-900 mt-12 py-6 text-center text-xs text-emerald-200">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-semibold">Projeto Integrador Extensionista — Curso de Gestão Hospitalar — Cetrus Sanar 2026</p>
+            <p class="text-emerald-400/80">Farmácia Verde: Sustentabilidade e Logística Reversa nas Unidades Básicas de Saúde</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- 1. FLOWCHART DATA & LOGIC ---
+        const flowchartData = {
+            1: {
+                title: "Recebimento e Descompactação na Farmácia da UBS",
+                desc: "As caixas contendo medicamentos chegam do Almoxarifado Central (CAF). O servidor ou residente de gestão hospitalar realiza a conferência dos insumos. As embalagens de embarque terciárias que não estiverem avariadas são separadas para devolução direta no próximo ciclo do veículo de transporte.",
+                action: "Verificar se há umidade no papelão e acondicionar o lote em pallets antes da abertura.",
+                staff: "Farmacêutico Responsável Técnico, Técnicos de Farmácia e Almoxarife."
+            },
+            2: {
+                title: "Triagem e Segregação Direta na Fonte",
+                desc: "No momento exato em que o medicamento é dispensado ao paciente, o profissional remove a cartela ou frasco e segrega a embalagem secundária de papelão juntamente com a bula, caso não seja necessária ao paciente. Impede-se a contaminação com resíduos químicos ou biológicos.",
+                action: "Descartar imediatamente frascos de vidro ou blísters sujos no recipiente adequado (Grupo B/E).",
+                staff: "Equipe de Dispensação de Medicamentos da UBS."
+            },
+            3: {
+                title: "Descaracterização e Compactação do Papelão",
+                desc: "Para evitar o uso indevido de embalagens e otimizar o espaço físico de armazenamento na unidade, as caixas são abertas totalmente, removendo-se fitas adesivas e desfazendo a estrutura tridimensional até torná-las planas.",
+                action: "Aplanar totalmente as caixas e remover eventuais etiquetas com dados pessoais ou confidenciais.",
+                staff: "Técnicos de Farmácia e Auxiliares de Serviços Gerais."
+            },
+            4: {
+                title: "Armazenamento Temporário Seletivo (Ponto Verde)",
+                desc: "As caixas achatadas e agrupadas são depositadas em um container ou área delimitada (Ponto Verde) devidamente sinalizada na cor azul (padrão papel/papelão), protegida contra chuva, umidade e pragas.",
+                action: "Manter o local trancado ou de acesso restrito à equipe para evitar descarte irregular de outros resíduos.",
+                staff: "Equipe de Higienização e Farmácia."
+            },
+            5: {
+                title: "Coleta por Cooperativas Parceiras",
+                desc: "Conforme cronograma pré-estabelecido com as cooperativas municipais de catadores de materiais recicláveis cadastradas, o lote de papelão limpo é recolhido e pesado na própria unidade.",
+                action: "Preencher a planilha de controle de saída de resíduos do Grupo D com assinatura do responsável da coleta.",
+                staff: "Cooperativa de Reciclagem e Gestor da UBS."
+            },
+            6: {
+                title: "Retorno Socioambiental e Indicadores",
+                desc: "O material coletado entra na cadeia formal de reciclagem da indústria. Gera-se renda para famílias de catadores e diminui-se drasticamente o volume encaminhado para o aterro sanitário público.",
+                action: "Consolidar os dados de peso no relatório mensal de gestão ambiental da saúde pública.",
+                staff: "Comitê de Gerenciamento de Resíduos da Secretaria de Saúde."
+            }
+        };
+
+        function selectStep(stepNumber) {
+            // Update UI step cards active states
+            for (let i = 1; i <= 6; i++) {
+                const card = document.getElementById(`step-card-${i}`);
+                if (i === stepNumber) {
+                    card.classList.add('step-active');
+                } else {
+                    card.classList.remove('step-active');
+                }
+            }
+
+            // Update details
+            const data = flowchartData[stepNumber];
+            document.getElementById('detail-step-number').innerText = `Passo ${stepNumber}`;
+            document.getElementById('detail-step-title').innerText = data.title;
+            document.getElementById('detail-step-desc').innerText = data.desc;
+            document.getElementById('detail-step-action').innerText = data.action;
+            document.getElementById('detail-step-staff').innerText = data.staff;
+        }
+
+        // --- 2. SIMULATOR & CHARTS LOGIC ---
+        let financialChart = null;
+        let ecoChart = null;
+
+        function initCharts() {
+            // Financial Chart (Bar)
+            const ctxFin = document.getElementById('financialChart').getContext('2d');
+            financialChart = new Chart(ctxFin, {
+                type: 'bar',
+                data: {
+                    labels: ['Economia em Aterro', 'Renda Cooperativas'],
+                    datasets: [{
+                        label: 'Valor Anual (R$)',
+                        data: [0, 0],
+                        backgroundColor: ['#14532d', '#2563eb'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => ` R$ ${context.parsed.y.toLocaleString('pt-BR')}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (value) => 'R$ ' + value.toLocaleString('pt-BR')
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Ecological Chart (Doughnut)
+            const ctxEco = document.getElementById('ecoChart').getContext('2d');
+            ecoChart = new Chart(ctxEco, {
+                type: 'doughnut',
+                data: {
+                    labels: ['CO₂ Evitado (kg)', 'Árvores Salvas (Unidades)'],
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#0d9488', '#d97706'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            runSimulation();
+        }
+
+        function runSimulation() {
+            const kgPerMonthPerUbs = parseInt(document.getElementById('input-volume').value);
+            const numUnits = parseInt(document.getElementById('input-units').value);
+
+            document.getElementById('display-volume').innerText = `${kgPerMonthPerUbs} kg/mês`;
+            document.getElementById('display-units').innerText = `${numUnits} ${numUnits === 1 ? 'Unidade' : 'Unidades'}`;
+
+            const totalAnnualKg = kgPerMonthPerUbs * 12 * numUnits;
+
+            // Metrics calculation
+            // Average cost avoided per kg in landfill = R$ 4.00
+            const economyLandfill = totalAnnualKg * 4.00;
+            // Average sale price for cardboard to cooperative = R$ 0.60/kg
+            const incomeCooperative = totalAnnualKg * 0.60;
+            // CO2 avoided = ~0.50 kg CO2 per kg of recycled cardboard
+            const co2Avoided = Math.round(totalAnnualKg * 0.50);
+            // ~17 trees saved per ton (1000kg) of paper
+            const treesSaved = Math.round((totalAnnualKg / 1000) * 17);
+
+            // Update UI metric cards
+            document.getElementById('sim-res-economy').innerText = `R$ ${economyLandfill.toLocaleString('pt-BR')}`;
+            document.getElementById('sim-res-income').innerText = `R$ ${incomeCooperative.toLocaleString('pt-BR')}`;
+            document.getElementById('sim-res-co2').innerText = `${co2Avoided.toLocaleString('pt-BR')} kg`;
+            document.getElementById('sim-res-trees').innerText = `${treesSaved.toLocaleString('pt-BR')} Árvores`;
+
+            // Update Charts
+            if (financialChart && ecoChart) {
+                financialChart.data.datasets[0].data = [economyLandfill, incomeCooperative];
+                financialChart.update();
+
+                ecoChart.data.datasets[0].data = [co2Avoided, treesSaved];
+                ecoChart.update();
+            }
+        }
+
+        // --- 3. WASTE MATRIX DATA & FILTER ---
+        const wasteData = [
+            { material: "Caixas de Papelão Ondulado (Externas)", class: "Grupo D", action: "Aplanar, desmontar e remover fitas", dest: "Cooperativas de Reciclagem / Catadores" },
+            { material: "Bulas e Cartuchos de Papel das Caixas", class: "Grupo D", action: "Agrupar e guardar secos no coletor azul", dest: "Indústria de Reciclagem de Papel" },
+            { material: "Caixas de Embarque do Almoxarifado Central", class: "Grupo D", action: "Manter conservadas para devolução", dest: "Logística Reversa / Reutilização na CAF" },
+            { material: "Frascos de Vidro com Restos de Xarope", class: "Grupo B", action: "Acondicionar em coletor rígido de resíduo químico", dest: "Tratamento Especial / Incineração" },
+            { material: "Cartelas Vazia de Blíster (Alumínio/Plástico)", class: "Grupo B / Grupo E", action: "Segregar em coletor próprio para contaminados", dest: "Aterro Industrial / Descontaminação" },
+            { material: "Agulhas e Seringas de Aplicação de Vacina", class: "Grupo E", action: "Descarte imediato na caixa Descarpack", dest: "Autoclavagem e Incineração Licenciada" },
+            { material: "Papel Toalha e Copos Plásticos de Uso Pessoal", class: "Grupo D", action: "Lixo comum não reciclável (se úmidos)", dest: "Coleta Comum Municipal / Aterro Sanitário" }
+        ];
+
+        function renderWasteTable(filter = 'all') {
+            const tbody = document.getElementById('waste-table-body');
+            tbody.innerHTML = '';
+
+            const filteredData = filter === 'all' 
+                ? wasteData 
+                : wasteData.filter(item => item.class.includes(filter));
+
+            filteredData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                
+                let badgeClass = "bg-emerald-100 text-emerald-800";
+                if (item.class.includes('Grupo B')) badgeClass = "bg-amber-100 text-amber-800";
+                if (item.class.includes('Grupo E')) badgeClass = "bg-rose-100 text-rose-800";
+
+                tr.innerHTML = `
+                    <td class="p-3.5 font-medium text-gray-900">${item.material}</td>
+                    <td class="p-3.5"><span class="px-2 py-0.5 rounded text-xs font-bold ${badgeClass}">${item.class}</span></td>
+                    <td class="p-3.5 text-gray-600">${item.action}</td>
+                    <td class="p-3.5 font-semibold text-emerald-900">${item.dest}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterWasteTable(category) {
+            // Update filter button active states
+            const buttons = document.querySelectorAll('.waste-filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#1b4332]', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700');
+            });
+            event.target.classList.remove('bg-white', 'text-gray-700');
+            event.target.classList.add('bg-[#1b4332]', 'text-white');
+
+            renderWasteTable(category);
+        }
+
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            renderWasteTable();
+        });
+    </script>
+</body>
+</html>
