@@ -190,6 +190,9 @@
             <a href="#simulador" class="py-4 text-slate-700 hover:text-emerald-700 border-b-2 border-transparent hover:border-emerald-600 whitespace-nowrap transition">
                 Simulador Socioambiental
             </a>
+            <a href="#carbono" class="py-4 text-slate-700 hover:text-emerald-700 border-b-2 border-transparent hover:border-emerald-600 whitespace-nowrap transition">
+                Crédito de Carbono
+            </a>
             <a href="#matriz" class="py-4 text-slate-700 hover:text-emerald-700 border-b-2 border-transparent hover:border-emerald-600 whitespace-nowrap transition">
                 Matriz de Segregação
             </a>
@@ -214,7 +217,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- PNRS Lei 12.305/2010 -->
-                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow-md transition flex flex-col justify-between space-y-4">
+                <a href="https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/lei/l12305.htm" target="_blank" rel="noopener noreferrer" aria-label="Ler a Lei nº 12.305/2010 no Planalto (abre em nova aba)" class="group cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow-md transition flex flex-col justify-between space-y-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
                     <div class="space-y-3">
                         <span class="inline-block px-3 py-1 rounded-lg bg-blue-100 text-blue-900 font-bold text-xs tracking-wide">
                             PNRS — Lei nº 12.305/2010
@@ -227,10 +230,11 @@
                     <div class="pt-2 border-t border-slate-100 text-xs text-slate-500">
                         Responsabilidade compartilhada • Logística reversa • Cooperativas de reciclagem
                     </div>
-                </article>
+                                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 group-hover:text-emerald-900 group-hover:underline">Acessar a Lei nº 12.305/2010 no Planalto <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+                </a>
 
                 <!-- ANVISA RDC 222/2018 -->
-                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow-md transition flex flex-col justify-between space-y-4">
+                <a href="https://depi.unicamp.br/arquivo/uploads/rdc0222-28-03-2018" target="_blank" rel="noopener noreferrer" aria-label="Ler a RDC nº 222/2018 (texto completo) (abre em nova aba)" class="group cursor-pointer bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow-md transition flex flex-col justify-between space-y-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
                     <div class="space-y-3">
                         <span class="inline-block px-3 py-1 rounded-lg bg-emerald-100 text-emerald-900 font-bold text-xs tracking-wide">
                             ANVISA RDC nº 222/2018
@@ -243,7 +247,8 @@
                     <div class="pt-2 border-t border-slate-100 text-xs text-slate-500">
                         Classificação em grupos • Segregação na origem • Segurança sanitária
                     </div>
-                </article>
+                                    <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 group-hover:text-emerald-900 group-hover:underline">Acessar a RDC nº 222/2018 (texto completo) <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span>
+                </a>
             </div>
         </section>
 
@@ -356,6 +361,27 @@
                         </div>
                     </div>
 
+                    <!-- Preço do crédito de carbono -->
+                    <div class="space-y-2">
+                        <label for="input-carbon" class="block text-sm font-medium text-slate-700">
+                            Preço do Crédito de Carbono (R$/tCO₂e):
+                        </label>
+                        <input
+                            type="range"
+                            id="input-carbon"
+                            min="10"
+                            max="150"
+                            value="33"
+                            step="1"
+                            class="w-full h-2 bg-emerald-100 rounded-lg accent-emerald-600 cursor-pointer"
+                        >
+                        <div class="flex justify-between items-center text-xs text-slate-500">
+                            <span>R$ 10</span>
+                            <span id="label-carbon" class="font-bold text-emerald-700 text-sm sm:text-base">R$ 33,00/crédito</span>
+                            <span>R$ 150</span>
+                        </div>
+                    </div>
+
                     <!-- Premissas da simulação -->
                     <div class="p-4 bg-emerald-50/80 rounded-xl border border-emerald-200/80 text-xs text-emerald-950 space-y-1.5 leading-relaxed">
                         <p class="font-bold text-emerald-900">Premissas de Cálculo Anual:</p>
@@ -363,6 +389,7 @@
                         <p>• <strong class="font-semibold">Receita Cooperativa:</strong> <strong class="font-semibold">R$ 0,65/kg</strong> de papelão reciclável.</p>
                         <p>• <strong class="font-semibold">CO₂ Evitado:</strong> <strong class="font-semibold">~0,50 kg CO₂</strong> por kg de papelão reciclado.</p>
                         <p>• <strong class="font-semibold">Árvores Salvas:</strong> <strong class="font-semibold">~17 árvores</strong> por tonelada (1.000 kg).</p>
+                        <p>• <strong class="font-semibold">Crédito de Carbono:</strong> <strong class="font-semibold">1 crédito = 1 tCO₂e</strong> (1.000 kg de CO₂ evitado). Preço inicial de R$ 33,00, valor de referência em contratações públicas brasileiras de 2026 (padrões VCS/Gold Standard); varia bastante conforme o tipo de projeto.</p>
                     </div>
                 </div>
 
@@ -394,6 +421,23 @@
                         </div>
                     </div>
 
+                    <!-- Crédito de carbono -->
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-4 sm:p-5 rounded-xl border border-emerald-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div>
+                            <span class="block text-[11px] font-bold text-emerald-800 uppercase tracking-wide">Crédito de Carbono Retornado</span>
+                            <span id="res-credits" class="text-lg sm:text-xl font-extrabold text-emerald-800 block mt-1">0,00 tCO₂e</span>
+                            <span class="text-[11px] text-slate-500">1 crédito = 1 tonelada de CO₂e evitada por ano</span>
+                        </div>
+                        <div class="sm:text-right">
+                            <span class="block text-[11px] font-bold text-emerald-800 uppercase tracking-wide">Valor Potencial</span>
+                            <span id="res-carbon-value" class="text-lg sm:text-xl font-extrabold text-teal-700 block mt-1">R$ 0,00</span>
+                            <span class="text-[11px] text-slate-500">Anual, ao preço do crédito escolhido</span>
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-slate-500 leading-relaxed -mt-3">
+                        Valor teórico: para vender créditos é preciso um projeto certificado (ex.: Verra ou Gold Standard), em geral reunindo várias unidades para ganhar escala e cobrir os custos de certificação. <a href="#carbono" class="font-semibold text-emerald-700 hover:underline">Veja os benefícios para hospitais e UBS</a>.
+                    </p>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-200/80 h-64 sm:h-72 relative">
                             <canvas id="financialChart"></canvas>
@@ -403,6 +447,54 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Seção: Crédito de Carbono, benefícios para hospitais e UBS -->
+        <section id="carbono" class="scroll-mt-20 space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-8 bg-emerald-600 rounded-full inline-block"></span>
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Crédito de Carbono: Benefícios para Hospitais e UBS</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Cada tonelada de CO₂e evitada equivale a 1 crédito. O retorno financeiro direto é modesto, mas os ganhos de gestão e de credibilidade são relevantes.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-emerald-400 hover:shadow-md transition space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-emerald-100 text-emerald-900 font-bold text-xs tracking-wide">Financeiro</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">Receita extra reinvestível</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">O crédito de carbono certificado pode ser vendido, e o valor pode voltar para a própria unidade: lixeiras e coletores, treinamento das equipes ou insumos da rotina de segregação.</p>
+                </article>
+                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-sky-400 hover:shadow-md transition space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-sky-100 text-sky-900 font-bold text-xs tracking-wide">Gestão</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">Impacto ambiental comprovado</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Medir o CO₂ evitado gera números documentados, úteis em relatórios de sustentabilidade, prestações de contas e processos de acreditação hospitalar.</p>
+                </article>
+                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-teal-400 hover:shadow-md transition space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-teal-100 text-teal-900 font-bold text-xs tracking-wide">Captação</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">Mais força para pedir apoio</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Mostrar economia no aterro, renda para a cooperativa e carbono evitado ajuda a defender o projeto junto à gestão, às secretarias de saúde e a possíveis financiadores.</p>
+                </article>
+                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-violet-400 hover:shadow-md transition space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-violet-100 text-violet-900 font-bold text-xs tracking-wide">Reputação</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">Imagem institucional</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Unidades com metas ambientais claras e mensuráveis ganham credibilidade com pacientes, parceiros e órgãos públicos.</p>
+                </article>
+                <article class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-blue-400 hover:shadow-md transition space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-blue-100 text-blue-900 font-bold text-xs tracking-wide">Regulação</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">Preparação para o mercado regulado</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">O Brasil instituiu o Sistema Brasileiro de Comércio de Emissões (Lei nº 15.042/2024). Quem já mede e registra suas reduções chega mais preparado às regras, que ainda estão em regulamentação.</p>
+                </article>
+                <article class="bg-amber-50 p-6 rounded-2xl shadow-sm border border-amber-200 space-y-3">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-amber-200 text-amber-900 font-bold text-xs tracking-wide">Atenção</span>
+                    <h3 class="font-bold text-base sm:text-lg text-slate-900">O que precisa ser considerado</h3>
+                    <ul class="text-sm text-slate-700 leading-relaxed space-y-2 list-disc pl-5">
+                        <li><strong class="font-semibold">Escala:</strong> uma unidade sozinha gera poucos créditos. O caminho realista é reunir várias UBS ou hospitais.</li>
+                        <li><strong class="font-semibold">Metodologia:</strong> o projeto precisa seguir um método aceito por certificadoras (como Verra ou Gold Standard) e provar que a redução não ocorreria sem ele. É preciso verificar se existe metodologia aplicável à reciclagem de cartonados.</li>
+                        <li><strong class="font-semibold">Ganhos mais certos:</strong> a economia com o aterro e a renda da cooperativa não dependem de certificação.</li>
+                    </ul>
+                </article>
             </div>
         </section>
 
@@ -785,11 +877,11 @@
                     financialChart = new Chart(finCanvas.getContext('2d'), {
                         type: 'bar',
                         data: {
-                            labels: ['Economia em Aterro (R$)', 'Receita Cooperativa (R$)'],
+                            labels: ['Economia em Aterro (R$)', 'Receita Cooperativa (R$)', 'Crédito de Carbono (R$)'],
                             datasets: [{
                                 label: 'Valor Anual (R$)',
-                                data: [0, 0],
-                                backgroundColor: ['#059669', '#0284c7'],
+                                data: [0, 0, 0],
+                                backgroundColor: ['#059669', '#0284c7', '#0d9488'],
                                 borderRadius: 8
                             }]
                         },
@@ -859,10 +951,12 @@
             try {
                 const volumeInput = document.getElementById('input-volume');
                 const costInput = document.getElementById('input-cost');
+                const carbonInput = document.getElementById('input-carbon');
                 if (!volumeInput || !costInput) return;
 
                 const monthlyKg = parseFloat(volumeInput.value) || 0;
                 const landfillCost = parseFloat(costInput.value) || 0;
+                const carbonPrice = carbonInput ? (parseFloat(carbonInput.value) || 0) : 0;
 
                 document.getElementById('label-volume').textContent = `${monthlyKg.toLocaleString('pt-BR')} kg/mês`;
                 document.getElementById('label-cost').textContent = `R$ ${landfillCost.toFixed(2).replace('.', ',')}/kg`;
@@ -872,6 +966,17 @@
                 const annualIncome = annualKg * 0.65;
                 const annualCo2 = Math.round(annualKg * 0.50);
                 const annualTrees = Math.round((annualKg / 1000) * 17);
+                const carbonCredits = (annualKg * 0.50) / 1000;          // 1 crédito = 1 tCO2e = 1.000 kg
+                const carbonValue = carbonCredits * carbonPrice;
+
+                const labelCarbon = document.getElementById('label-carbon');
+                if (labelCarbon) labelCarbon.textContent = `R$ ${carbonPrice.toFixed(2).replace('.', ',')}/crédito`;
+                const resCredits = document.getElementById('res-credits');
+                if (resCredits) resCredits.textContent =
+                    `${carbonCredits.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} tCO₂e`;
+                const resCarbonValue = document.getElementById('res-carbon-value');
+                if (resCarbonValue) resCarbonValue.textContent =
+                    `R$ ${carbonValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
                 document.getElementById('res-economy').textContent =
                     `R$ ${annualEconomy.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -883,7 +988,7 @@
                     `${annualTrees.toLocaleString('pt-BR')}`;
 
                 if (financialChart) {
-                    financialChart.data.datasets[0].data = [annualEconomy, annualIncome];
+                    financialChart.data.datasets[0].data = [annualEconomy, annualIncome, carbonValue];
                     financialChart.update();
                 }
 
@@ -905,6 +1010,8 @@
             if (volumeInput && costInput) {
                 volumeInput.value = 300;
                 costInput.value = 5.50;
+                const carbonInput = document.getElementById('input-carbon');
+                if (carbonInput) carbonInput.value = 33;
                 updateSimulation();
             }
         }
@@ -1000,6 +1107,10 @@
             }
             if (costInput) {
                 costInput.addEventListener('input', updateSimulation);
+            }
+            const carbonInput = document.getElementById('input-carbon');
+            if (carbonInput) {
+                carbonInput.addEventListener('input', updateSimulation);
             }
         });
     </script>
