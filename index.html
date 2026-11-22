@@ -62,37 +62,121 @@
             color: #ffffff;
         }
 
+
+        /* ===== HERO: plano verde com árvores que compacta até virar o header ===== */
+        #hero { will-change: height, transform; }
+        #hero.is-compacting { box-shadow: 0 10px 30px -12px rgba(2, 44, 34, 0.55); }
+
+        /* Céu: altura fixa (--F) ancorada no topo, assim ao compactar o topo escuro do gradiente
+           continua igual ao header original */
+        .hero-sky {
+            position: absolute; top: 0; left: 0; right: 0;
+            height: var(--F, 100vh);
+            background: linear-gradient(180deg, #022c22 0%, #064e3b 30%, #047857 62%, #34d399 100%);
+        }
+        .hero-sun {
+            position: absolute; top: -12%; right: -8%;
+            width: 60vmax; height: 60vmax; border-radius: 50%;
+            background: radial-gradient(circle, rgba(167, 243, 208, 0.38) 0%, rgba(167, 243, 208, 0) 62%);
+            pointer-events: none;
+        }
+
+        /* Imagem natural do hero (foto da floresta, substitua o arquivo para trocar) */
+        .hero-photo {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            height: var(--F, 100vh);
+            background: url('img/floresta-hero.jpg') center top / cover no-repeat;
+            will-change: transform, opacity;
+        }
+        /* Escurece o topo para o texto branco continuar legível sobre o céu azul */
+        .hero-shade {
+            position: absolute; top: 0; left: 0; right: 0;
+            height: min(var(--F, 100vh), 640px);
+            background: linear-gradient(180deg, rgba(2, 44, 34, 0.78) 0%, rgba(2, 44, 34, 0.45) 45%, rgba(2, 44, 34, 0) 100%);
+            pointer-events: none;
+        }
+
+        /* Folhas flutuando */
+        .leaf {
+            position: absolute; top: -30px; width: 14px; height: 14px;
+            background: #6ee7b7; opacity: 0;
+            border-radius: 0 100% 0 100%;
+            animation: leaf-fall linear infinite;
+        }
+        @keyframes leaf-fall {
+            0%   { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+            10%  { opacity: .75; }
+            90%  { opacity: .5; }
+            100% { transform: translate3d(var(--dx, 60px), 105vh, 0) rotate(540deg); opacity: 0; }
+        }
+
+        /* Indicador de rolagem */
+        .scroll-hint { animation: hint-bob 1.8s ease-in-out infinite; }
+        @keyframes hint-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .leaf, .scroll-hint { animation: none; }
+            html { scroll-behavior: auto; }
+        }
+
         /* Transição suave no painel de detalhes do fluxograma */
         #stage-detail-card {
             transition: all 0.25s ease-in-out;
         }
     </style>
+    <noscript>
+        <style>
+            #hero { position: relative !important; height: auto !important; }
+            #hero-spacer, .scroll-hint { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Cabeçalho institucional do banner interativo (sem lista de integrantes no topo) -->
-    <header class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-900 text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            <div class="space-y-2.5 max-w-3xl">
-                <span class="inline-block bg-emerald-800/90 text-emerald-100 text-xs font-semibold px-3.5 py-1 rounded-full uppercase tracking-wider border border-emerald-700/70">
-                    Projeto Integrador Extensionista • Curso de Gestão Hospitalar • Sanar Cetrus 2026
-                </span>
-                <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                    Farmácia Verde: Logística Reversa
-                </h1>
-                <p class="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-                    Gestão sustentável de embalagens cartonadas em unidades de saúde (UBS e hospitais), promovendo segregação na fonte, redução de custos com aterro sanitário, geração de renda a cooperativas de reciclagem e menor impacto ambiental.
-                </p>
-            </div>
+    <!-- HERO: ao abrir, ocupa a tela toda (plano verde + árvores). Ao rolar, compacta até virar o header -->
+    <header id="hero" class="fixed inset-x-0 top-0 z-30 overflow-hidden text-white" style="height:100vh">
+        <div class="hero-sky"></div>
+        <div class="hero-sun"></div>
+        <div id="hero-leaves" class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
 
-            <div class="w-full lg:w-auto bg-emerald-950/65 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-emerald-700/60 text-xs sm:text-sm text-emerald-100 space-y-1.5 lg:text-right shrink-0">
-                <p><span class="font-semibold text-white">Modalidade:</span> Projeto Integrador Extensionista</p>
-                <p><span class="font-semibold text-white">Curso:</span> Gestão Hospitalar • Sanar Cetrus 2026</p>
-                <p><span class="font-semibold text-white">Abrangência:</span> UBS e Hospitais</p>
-                <p><span class="font-semibold text-white">Foco:</span> Embalagens Cartonadas (Grupo D)</p>
+        <!-- Imagem natural: floresta vista de cima, montanhas e céu azul -->
+        <div id="hero-photo" class="hero-photo" role="img" aria-label="Floresta vista de cima com montanhas ao fundo e céu azul"></div>
+        <div id="hero-shade" class="hero-shade" aria-hidden="true"></div>
+
+        <!-- Mesmas informações do header original -->
+        <div id="hero-inner" class="relative z-10">
+            <div id="hero-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                <div class="space-y-2.5 max-w-3xl">
+                    <span class="inline-block bg-emerald-800/90 text-emerald-100 text-xs font-semibold px-3.5 py-1 rounded-full uppercase tracking-wider border border-emerald-700/70">
+                        Projeto Integrador Extensionista • Curso de Gestão Hospitalar • Sanar Cetrus 2026
+                    </span>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+                        Farmácia Verde: Logística Reversa
+                    </h1>
+                    <p class="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
+                        Gestão sustentável de embalagens cartonadas em unidades de saúde (UBS e hospitais), promovendo segregação na fonte, redução de custos com aterro sanitário, geração de renda a cooperativas de reciclagem e menor impacto ambiental.
+                    </p>
+                </div>
+
+                <div class="w-full lg:w-auto bg-emerald-950/65 backdrop-blur-sm p-4 sm:p-5 rounded-2xl border border-emerald-700/60 text-xs sm:text-sm text-emerald-100 space-y-1.5 lg:text-right shrink-0">
+                    <p><span class="font-semibold text-white">Modalidade:</span> Projeto Integrador Extensionista</p>
+                    <p><span class="font-semibold text-white">Curso:</span> Gestão Hospitalar • Sanar Cetrus 2026</p>
+                    <p><span class="font-semibold text-white">Abrangência:</span> UBS e Hospitais</p>
+                    <p><span class="font-semibold text-white">Foco:</span> Embalagens Cartonadas (Grupo D)</p>
+                </div>
             </div>
         </div>
+
+        <!-- Dica de rolagem -->
+        <button id="hero-hint" type="button" aria-label="Rolar para o conteúdo"
+                class="scroll-hint absolute left-1/2 -translate-x-1/2 bottom-5 z-10 flex flex-col items-center gap-1 text-emerald-50 text-xs font-semibold tracking-wider uppercase">
+            Role para explorar
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
     </header>
+
+    <!-- Espaço que reserva a altura inicial do hero (o conteúdo começa depois dele) -->
+    <div id="hero-spacer" aria-hidden="true" style="height:100vh"></div>
 
     <!-- Navegação fixa entre as seções do banner -->
     <nav aria-label="Navegação principal do banner" class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-40 shadow-sm">
@@ -824,6 +908,82 @@
                 updateSimulation();
             }
         }
+
+
+        /* ===== HERO: árvores geradas, parallax e compactação por scroll ===== */
+        (function () {
+            const hero = document.getElementById('hero');
+            const inner = document.getElementById('hero-inner');
+            const content = document.getElementById('hero-content');
+            const spacer = document.getElementById('hero-spacer');
+            const hint = document.getElementById('hero-hint');
+            if (!hero || !content || !spacer) return;
+
+            // Gerador pseudo-aleatório com semente (folhas sempre iguais a cada carregamento)
+            function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+
+            // Folhas
+            const leavesHost = document.getElementById('hero-leaves');
+            const lr = rng(7);
+            for (let i = 0; i < 14; i++) {
+                const leaf = document.createElement('span');
+                leaf.className = 'leaf';
+                leaf.style.left = (lr() * 100) + '%';
+                leaf.style.width = leaf.style.height = (9 + lr() * 10) + 'px';
+                leaf.style.animationDuration = (9 + lr() * 9) + 's';
+                leaf.style.animationDelay = (-lr() * 16) + 's';
+                leaf.style.setProperty('--dx', ((lr() - 0.3) * 160) + 'px');
+                leavesHost.appendChild(leaf);
+            }
+
+            // Compactação: altura do plano = max(altura do header, F - scroll)
+            const photo = document.getElementById('hero-photo');
+            const shade = document.getElementById('hero-shade');
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let F = window.innerHeight, H = 0, ticking = false;
+
+            function measure() {
+                H = content.offsetHeight;                          // altura final = header original
+                F = Math.max(window.innerHeight, H + 180);         // altura inicial = tela cheia
+                spacer.style.height = F + 'px';
+                hero.style.setProperty('--F', F + 'px');
+                update();
+            }
+
+            function update() {
+                ticking = false;
+                const s = Math.max(0, window.scrollY);
+                const range = Math.max(1, F - H);
+                const p = Math.min(1, s / range);                  // 0 = tela cheia, 1 = header compacto
+                const h = Math.max(H, F - s);
+                const shift = Math.min(0, F - s - H);              // depois de compactar, sai pelo topo como o header original
+
+                hero.style.height = h + 'px';
+                hero.style.transform = shift ? `translate3d(0, ${shift}px, 0)` : '';
+                hero.classList.toggle('is-compacting', p > 0 && p < 1);
+
+                inner.style.marginTop = ((1 - p) * 40) + 'px';
+
+                const fade = Math.max(0, 1 - p * 1.5);          // a imagem some e revela o verde do header
+                if (photo) {
+                    photo.style.opacity = fade;
+                    photo.style.transform = reduce ? '' : `translate3d(0, ${s * 0.25}px, 0)`;
+                }
+                if (shade) shade.style.opacity = fade;
+                if (hint) hint.style.opacity = Math.max(0, 1 - p * 5);
+            }
+
+            function onScroll() {
+                if (!ticking) { ticking = true; requestAnimationFrame(update); }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', measure);
+            window.addEventListener('load', measure);
+            if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+            if (hint) hint.addEventListener('click', () => window.scrollTo({ top: F - H, behavior: 'smooth' }));
+            measure();
+        })();
 
         // Inicialização após o carregamento completo do DOM
         document.addEventListener('DOMContentLoaded', () => {
